@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable padding-line-between-statements */
 'use strict';
 
 const http = require('node:http');
@@ -16,6 +14,7 @@ function createServer() {
       });
 
       res.end('To get a file, use /file/<file-path>');
+
       return;
     }
 
@@ -28,6 +27,7 @@ function createServer() {
       });
 
       res.end('Invalid path');
+
       return;
     }
 
@@ -37,19 +37,13 @@ function createServer() {
       });
 
       res.end('File not found');
+
       return;
     }
 
-    const requestedFile = filePath === ''
-      ? 'index.html'
-      : filePath;
+    const requestedFile = filePath === '' ? 'index.html' : filePath;
 
-    const fullPath = path.join(
-      __dirname,
-      '..',
-      'public',
-      requestedFile,
-    );
+    const fullPath = path.join(__dirname, '..', 'public', requestedFile);
 
     fs.readFile(fullPath, (error, data) => {
       if (error) {
@@ -58,6 +52,7 @@ function createServer() {
         });
 
         res.end('File not found');
+
         return;
       }
 
