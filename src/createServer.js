@@ -10,39 +10,24 @@ function createServer() {
   return http.createServer((req, res) => {
     const { url } = req;
 
-    if (url === '/file') {
-      res.writeHead(200, {
-        'Content-Type': 'text/plain',
-      });
-
-      res.end('To get a file, use /file/<file-path>');
-      return;
-    }
-
-    if (url === '/app.js') {
-      res.writeHead(400, {
-        'Content-Type': 'text/plain',
-      });
-
-      res.end('Invalid path');
-      return;
-    }
-
-    if (url.includes('..')) {
-      res.writeHead(400, {
-        'Content-Type': 'text/plain',
-      });
-
-      res.end('Invalid path');
-      return;
-    }
-
     if (!url.startsWith('/file/')) {
       res.writeHead(200, {
         'Content-Type': 'text/plain',
       });
 
       res.end('To get a file, use /file/<file-path>');
+      return;
+    }
+
+    const filePath = url.slice('/file/'.length);
+    const pathParts = filePath.split('/');
+
+    if (pathParts.includes('..')) {
+      res.writeHead(400, {
+        'Content-Type': 'text/plain',
+      });
+
+      res.end('Invalid path');
       return;
     }
 
@@ -55,13 +40,16 @@ function createServer() {
       return;
     }
 
-    let filePath = url.slice('/file/'.length);
+    const requestedFile = filePath === ''
+      ? 'index.html'
+      : filePath;
 
-    if (filePath === '') {
-      filePath = 'index.html';
-    }
-
-    const fullPath = path.join(__dirname, '..', 'public', filePath);
+    const fullPath = path.join(
+      __dirname,
+      '..',
+      'public',
+      requestedFile,
+    );
 
     fs.readFile(fullPath, (error, data) => {
       if (error) {
