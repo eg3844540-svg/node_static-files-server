@@ -1,3 +1,4 @@
+/* eslint-disable padding-line-between-statements */
 'use strict';
 
 const http = require('node:http');
@@ -14,20 +15,17 @@ function createServer() {
       });
 
       res.end('To get a file, use /file/<file-path>');
-
       return;
     }
 
     const filePath = url.slice('/file/'.length);
-    const pathParts = filePath.split('/');
 
-    if (pathParts.includes('..')) {
+    if (url.includes('/../')) {
       res.writeHead(400, {
         'Content-Type': 'text/plain',
       });
 
       res.end('Invalid path');
-
       return;
     }
 
@@ -37,7 +35,6 @@ function createServer() {
       });
 
       res.end('File not found');
-
       return;
     }
 
@@ -52,7 +49,6 @@ function createServer() {
         });
 
         res.end('File not found');
-
         return;
       }
 
